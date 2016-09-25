@@ -24,10 +24,13 @@ host = Niubility Macbook ;设置主机名
 
 [app]
 title = Feiq by CompileLife ;设置一个高端大气上档次的窗口标题名称，亮瞎围观你飞秋的人
-unread_timer=600 ;启用定时提醒未读消息，间隔10分钟
 
 [network]
 custom_group=192.168.74.|192.168.82. ;设置一些广播包无法触及的子网，点号结束一个网段的定义，竖线分隔各个网段
+
+[plugin]
+unread_checker=1 ;启用定时提醒未读通知，默认启用
+unread_timer=600 ;启用定时提醒未读消息，间隔10分钟
 ```
 
 ## 计划中的特性

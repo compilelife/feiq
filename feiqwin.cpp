@@ -54,12 +54,26 @@ void FeiqWin::unInit()
     for (auto plugin : mPlugins)
     {
         plugin->unInit();
-        delete plugin;
     }
     mPlugins.clear();
 }
 
 void FeiqWin::loadPlugins()
 {
-    mPlugins.append(new UnreadChecker());
+    auto gAllPlugins = PluginManager::instance().allPlugins;
+    cout<<"listing all supported plugins:"<<endl;
+    for (auto iter : gAllPlugins)
+    {
+        cout<<iter.first;
+        if (mMainWin->mSettings->value("plugin/"+QString(iter.first), "1").toBool())
+        {
+            cout<<"    enable";
+            mPlugins.append(iter.second);
+        }
+        else
+        {
+            cout<<"    disable";
+        }
+        cout<<endl;
+    }
 }

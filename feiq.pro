@@ -56,7 +56,8 @@ SOURCES += main.cpp\
     chooseemojiwidget.cpp \
     sendtextedit.cpp \
     feiqwin.cpp \
-    plugin/unreadchecker.cpp
+    plugin/unreadchecker.cpp \
+    plugin/iplugin.cpp
 
 
 HEADERS  += mainwindow.h \
