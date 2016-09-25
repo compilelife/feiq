@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>744</width>
+    <height>576</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>Monaco</family>
+   </font>
+  </property>
+  <property name="acceptDrops">
+   <bool>true</bool>
+  </property>
+  <property name="windowTitle">
+   <string>feiq</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QListWidget" name="fellowListWidget">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>50</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="sizeIncrement">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="RecvTextEdit" name="recvEdit">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="SendTextEdit" name="sendEdit">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>744</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="searchMenu">
+    <property name="title">
+     <string>好友</string>
+    </property>
+    <addaction name="actionSearchFellow"/>
+    <addaction name="actionRefreshFellows"/>
+    <addaction name="actionAddFellow"/>
+   </widget>
+   <widget class="QMenu" name="settingMenu">
+    <property name="title">
+     <string>设置</string>
+    </property>
+    <addaction name="actionSettings"/>
+   </widget>
+   <widget class="QMenu" name="menuDownload">
+    <property name="title">
+     <string>下载</string>
+    </property>
+    <addaction name="actionOpendl"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>编辑</string>
+    </property>
+    <addaction name="actionSendText"/>
+    <addaction name="actionSendKnock"/>
+    <addaction name="actionSendFile"/>
+    <addaction name="actionInsertEmoji"/>
+   </widget>
+   <addaction name="searchMenu"/>
+   <addaction name="settingMenu"/>
+   <addaction name="menuDownload"/>
+   <addaction name="menuEdit"/>
+  </widget>
+  <action name="actionSearchFellow">
+   <property name="text">
+    <string>查找</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>打开设置文件</string>
+   </property>
+  </action>
+  <action name="actionOpendl">
+   <property name="text">
+    <string>打开文件管理对话框</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
+   </property>
+  </action>
+  <action name="actionSendText">
+   <property name="text">
+    <string>发送文本消息</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Return</string>
+   </property>
+  </action>
+  <action name="actionSendKnock">
+   <property name="text">
+    <string>发送窗口抖动</string>
+   </property>
+  </action>
+  <action name="actionSendFile">
+   <property name="text">
+    <string>发送文件</string>
+   </property>
+  </action>
+  <action name="actionRefreshFellows">
+   <property name="text">
+    <string>刷新</string>
+   </property>
+  </action>
+  <action name="actionAddFellow">
+   <property name="text">
+    <string>手动添加</string>
+   </property>
+  </action>
+  <action name="actionInsertEmoji">
+   <property name="text">
+    <string>插入表情</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>RecvTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header>recvtextedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SendTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header>sendtextedit.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
