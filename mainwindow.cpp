@@ -11,6 +11,7 @@
 #include "addfellowdialog.h"
 #include <QProcess>
 #include "platformdepend.h"
+#include "feiqwin.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -68,10 +69,6 @@ MainWindow::MainWindow(QWidget *parent) :
     mTitle = mSettings->value("app/title", "mac飞秋").toString();
     setWindowTitle(mTitle);
 
-    mUnreadTimerInterval = mSettings->value("app/unread_timer", "0").toInt();
-    if (mUnreadTimerInterval > 0)
-        mUnreadTimerId = startTimer(mUnreadTimerInterval*1000, Qt::VeryCoarseTimer);
-
     //初始化飞秋引擎
     connect(this, SIGNAL(feiqViewEvent(shared_ptr<ViewEvent>)), this, SLOT(handleFeiqViewEvent(shared_ptr<ViewEvent>)));
 
@@ -90,6 +87,12 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::setFeiqWin(FeiqWin *feiqWin)
+{
+    mFeiqWin = feiqWin;
+    mFeiqWin->init(this);
+}
+
 void MainWindow::enterEvent(QEvent *event)
 {
     auto fellow = mRecvTextEdit->curFellow();
@@ -100,16 +103,6 @@ void MainWindow::enterEvent(QEvent *event)
     }
 
     PlatformDepend::instance().hideAllNotify();
-}
-
-void MainWindow::timerEvent(QTimerEvent *event)
-{
-    if (event->timerId() == mUnreadTimerId)
-    {
-        auto count = getUnreadCount();
-        if (count > 0)
-            PlatformDepend::instance().showNotify("未读提醒", QString("还有%1条未读消息").arg(count));
-    }
 }
 
 void MainWindow::openChartTo(const Fellow *fellow)

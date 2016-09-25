@@ -19,18 +19,22 @@ namespace Ui {
 class MainWindow;
 }
 
+class FeiqWin;
+
 Q_DECLARE_METATYPE(shared_ptr<ViewEvent>)
 class MainWindow : public QMainWindow, IFeiqView
 {
     Q_OBJECT
 
+    friend class FeiqWin;
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void setFeiqWin(FeiqWin* feiqWin);
+
 protected:
     void enterEvent(QEvent *event);
-    void timerEvent(QTimerEvent *event);
 
 signals:
     void showErrorAndQuit(const QString& text);
@@ -92,9 +96,7 @@ private:
     SendTextEdit* mSendTextEdit;
     QString mTitle;
     unordered_map<const Fellow*, list<shared_ptr<ViewEvent>>> mUnreadEvents;
-
-    int mUnreadTimerInterval;
-    int mUnreadTimerId;
+    FeiqWin* mFeiqWin = nullptr;
 };
 
 #endif // MAINWINDOW_H

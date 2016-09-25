@@ -54,7 +54,9 @@ SOURCES += main.cpp\
     chooseemojidlg.cpp \
     platformdepend.cpp \
     chooseemojiwidget.cpp \
-    sendtextedit.cpp
+    sendtextedit.cpp \
+    feiqwin.cpp \
+    plugin/unreadchecker.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -88,7 +90,10 @@ HEADERS  += mainwindow.h \
     chooseemojidlg.h \
     platformdepend.h \
     chooseemojiwidget.h \
-    sendtextedit.h
+    sendtextedit.h \
+    plugin/iplugin.h \
+    feiqwin.h \
+    plugin/unreadchecker.h
 
 FORMS    += mainwindow.ui \
     searchfellowdlg.ui \
