@@ -65,7 +65,7 @@ void FeiqWin::loadPlugins()
     for (auto iter : gAllPlugins)
     {
         cout<<iter.first;
-        if (mMainWin->mSettings->value("plugin/"+QString(iter.first), "1").toBool())
+        if (mMainWin->mSettings->value(QString(iter.first)+"/enable", "1").toBool())
         {
             cout<<"    enable";
             mPlugins.append(iter.second);
