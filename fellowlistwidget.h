@@ -11,6 +11,8 @@ class FellowListWidget : public QObject
     Q_OBJECT
 
 public:
+    typedef std::function<int (const Fellow&, const Fellow&)> RankPredict;
+
     FellowListWidget();
     void bindTo(QListWidget* widget);
 
@@ -19,6 +21,7 @@ public:
     void top(const Fellow& fellow);
     void topSecond(const Fellow& fellow);
     void mark(const Fellow& fellow, const QString &info);
+    void setRankPredict(RankPredict predict);
 
 signals:
     void select(const Fellow* fellow);
@@ -29,8 +32,11 @@ private slots:
 private:
     QString fellowText(const Fellow& fellow);
     QListWidgetItem* findFirstItem(const Fellow& fellow);
+    int requestRow(const Fellow& fellow);
+    const Fellow* getFellow(const QListWidgetItem* item);
 
 private:
+    RankPredict mRankPredict;
     QListWidget* mWidget;
 };
 

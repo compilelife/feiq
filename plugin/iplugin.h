@@ -9,9 +9,9 @@ class IPlugin
 {
 public:
     virtual ~IPlugin();
-    virtual void init(FeiqWin* feiqWin);
-
-    virtual void unInit() = 0;
+    void setFeiqWin(FeiqWin* feiqWin);
+    virtual void init();
+    virtual void unInit();
 
 protected:
     FeiqWin* mFeiq;

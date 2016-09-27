@@ -19,9 +19,9 @@ void UnreadChecker::timerEvent(QTimerEvent *event)
     }
 }
 
-void UnreadChecker::init(FeiqWin *feiqWin)
+void UnreadChecker::init()
 {
-    IPlugin::init(feiqWin);
+    IPlugin::init();
 
     auto settings = mFeiq->settings();
     mUnreadTimerInterval = settings->value(PLUGIN_NAME"/timer", "0").toInt();

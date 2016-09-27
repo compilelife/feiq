@@ -10,7 +10,7 @@ class UnreadChecker : public QObject, public IPlugin
 
 public:
     UnreadChecker();
-    void init(FeiqWin* feiqWin) override;
+    void init() override;
     void unInit() override;
 
 protected:

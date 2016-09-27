@@ -46,7 +46,10 @@ void FeiqWin::init(MainWindow *mainWin)
     loadPlugins();
 
     for (auto plugin : mPlugins)
-        plugin->init(this);
+    {
+        plugin->setFeiqWin(this);
+        plugin->init();
+    }
 }
 
 void FeiqWin::unInit()

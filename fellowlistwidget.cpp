@@ -17,8 +17,9 @@ void FellowListWidget::update(const Fellow &fellow)
     auto item = findFirstItem(fellow);
     if (item == nullptr)
     {
-        mWidget->addItem(fellowText(fellow));
-        item = mWidget->item(mWidget->count()-1);
+        int row = requestRow(fellow);
+        mWidget->insertItem(row, fellowText(fellow));
+        item = mWidget->item(row);
     }
     else
     {
@@ -72,12 +73,17 @@ void FellowListWidget::mark(const Fellow &fellow, const QString &info)
     }
 }
 
+void FellowListWidget::setRankPredict(FellowListWidget::RankPredict predict)
+{
+    mRankPredict = predict;
+}
+
 void FellowListWidget::itemChosen(QListWidgetItem *item)
 {
     if (item == nullptr)
         return;
 
-    auto fellow = static_cast<const Fellow*>(item->data(Qt::UserRole).value<void*>());
+    auto fellow = getFellow(item);
     emit select(fellow);
 }
 
@@ -97,10 +103,34 @@ QListWidgetItem *FellowListWidget::findFirstItem(const Fellow &fellow)
     for (int i = 0; i < count; i++)
     {
         auto widget = mWidget->item(i);
-        auto f = static_cast<const Fellow*>(widget->data(Qt::UserRole).value<void*>());
+        auto f = getFellow(widget);
         if (f->getIp() == fellow.getIp())
             return widget;
     }
 
     return nullptr;
+}
+
+int FellowListWidget::requestRow(const Fellow &fellow)
+{
+    auto count = mWidget->count();
+
+    if (!mRankPredict)
+        return count;
+
+    int row = count;
+    for (; row > 0; row--)
+    {
+        auto f = getFellow(mWidget->item(row-1));
+        auto ret = mRankPredict(*f, fellow);
+        if (ret >= 0)
+            break;
+    }
+
+    return row;
+}
+
+const Fellow *FellowListWidget::getFellow(const QListWidgetItem *item)
+{
+    return static_cast<const Fellow*>(item->data(Qt::UserRole).value<void*>());
 }

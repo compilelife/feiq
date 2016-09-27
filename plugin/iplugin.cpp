@@ -5,9 +5,18 @@ IPlugin::~IPlugin()
 
 }
 
-void IPlugin::init(FeiqWin *feiqWin)
+void IPlugin::setFeiqWin(FeiqWin *feiqWin)
 {
     mFeiq = feiqWin;
+}
+
+void IPlugin::init()
+{
+}
+
+void IPlugin::unInit()
+{
+
 }
 
 PluginManager::PluginManager()

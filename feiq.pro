@@ -57,7 +57,8 @@ SOURCES += main.cpp\
     sendtextedit.cpp \
     feiqwin.cpp \
     plugin/unreadchecker.cpp \
-    plugin/iplugin.cpp
+    plugin/iplugin.cpp \
+    plugin/rankuser.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -94,7 +95,8 @@ HEADERS  += mainwindow.h \
     sendtextedit.h \
     plugin/iplugin.h \
     feiqwin.h \
-    plugin/unreadchecker.h
+    plugin/unreadchecker.h \
+    plugin/rankuser.h
 
 FORMS    += mainwindow.ui \
     searchfellowdlg.ui \

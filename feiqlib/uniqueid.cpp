@@ -9,7 +9,7 @@ UniqueId::UniqueId()
 IdType UniqueId::get()
 {
     auto id = ++mId;
-    if (id >= INT_MAX || id < 0)
+    if (id >= ULONG_LONG_MAX)
         mId=1;
 
     return mId;

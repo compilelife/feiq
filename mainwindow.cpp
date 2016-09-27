@@ -170,7 +170,7 @@ void MainWindow::handleFeiqViewEvent(shared_ptr<ViewEvent> event)
     }
     else if (event->what == ViewEventType::SEND_TIMEO || event->what == ViewEventType::MESSAGE)
     {
-        //地球人都知道这个分支中的ViewEvent集成自FellowViewEvent
+        //地球人都知道这个分支中的ViewEvent继承自FellowViewEvent
         auto e = static_cast<FellowViewEvent*>(event.get());
         auto fellow = e->fellow.get();
 
