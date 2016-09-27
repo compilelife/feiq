@@ -395,7 +395,14 @@ vector<const Fellow *> MainWindow::fellowSearchDriver(const QString &text)
 void MainWindow::initFeiq()
 {
     //配置飞秋
-    mFeiq.setMyName(mSettings->value("user/name").toString().toStdString());
+    auto name = mSettings->value("user/name").toString();
+    if (name.isEmpty())
+    {
+        emit showErrorAndQuit("请先打开【"+mSettings->fileName()+"】设置用户名(user/name)");
+        return;
+    }
+
+    mFeiq.setMyName(name.toStdString());
     mFeiq.setMyHost(mSettings->value("user/host","feiq by cy").toString().toStdString());
 
     auto customGrroup = mSettings->value("network/custom_group", "").toString();
