@@ -7,7 +7,7 @@
 #include "recvtextedit.h"
 #include "feiqlib/feiqengine.h"
 #include "filemanagerdlg.h"
-#include <QSettings>
+#include "settings.h"
 #include <unordered_map>
 #include "chooseemojidlg.h"
 #include <QFileInfo>
@@ -90,7 +90,7 @@ private:
     SearchFellowDlg* mSearchFellowDlg;
     FileManagerDlg* mDownloadFileDlg;
     ChooseEmojiDlg* mChooseEmojiDlg;
-    QSettings* mSettings;
+    Settings* mSettings;
     FeiqEngine mFeiq;
     RecvTextEdit* mRecvTextEdit;
     SendTextEdit* mSendTextEdit;

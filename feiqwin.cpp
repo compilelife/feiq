@@ -29,7 +29,7 @@ const FeiqModel *FeiqWin::feiqModel()
     return &(mMainWin->mFeiq.getModel());
 }
 
-QSettings *FeiqWin::settings()
+Settings *FeiqWin::settings()
 {
     return mMainWin->mSettings;
 }

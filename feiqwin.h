@@ -6,6 +6,7 @@
 #include "qsettings.h"
 #include "fellowlistwidget.h"
 #include "feiqlib/feiqmodel.h"
+#include "settings.h"
 
 class MainWindow;
 class IPlugin;
@@ -24,7 +25,7 @@ public:
     SendTextEdit* sendTextEdit();
     FellowListWidget* fellowListWidget();
     const FeiqModel* feiqModel();
-    QSettings* settings();
+    Settings* settings();
 
 public:
     int getUnreadCount();

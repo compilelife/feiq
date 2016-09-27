@@ -64,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //加载配置
     auto settingFilePath = QDir::home().filePath(".feiq_setting.ini");
-    mSettings = new QSettings(settingFilePath, QSettings::IniFormat);
+    mSettings = new Settings(settingFilePath, QSettings::IniFormat);
     mSettings->setIniCodec(QTextCodec::codecForName("UTF-8"));
     mTitle = mSettings->value("app/title", "mac飞秋").toString();
     setWindowTitle(mTitle);
@@ -80,6 +80,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     mFeiq.stop();
+    mSettings->sync();
     delete mSettings;
     delete mSearchFellowDlg;
     delete mDownloadFileDlg;

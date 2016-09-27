@@ -24,7 +24,7 @@ void UnreadChecker::init()
     IPlugin::init();
 
     auto settings = mFeiq->settings();
-    mUnreadTimerInterval = settings->value(PLUGIN_NAME"/timer", "0").toInt();
+    mUnreadTimerInterval = settings->value(PLUGIN_NAME"/timer", "600").toInt();
     if (mUnreadTimerInterval > 0)
         mUnreadTimerId = startTimer(mUnreadTimerInterval*1000, Qt::VeryCoarseTimer);
 }

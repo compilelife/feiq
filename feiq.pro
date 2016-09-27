@@ -11,8 +11,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = feiq
 TEMPLATE = app
 
-
-
 LIBS += -liconv -lsqlite3
 
 mac{
@@ -58,7 +56,8 @@ SOURCES += main.cpp\
     feiqwin.cpp \
     plugin/unreadchecker.cpp \
     plugin/iplugin.cpp \
-    plugin/rankuser.cpp
+    plugin/rankuser.cpp \
+    settings.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -96,7 +95,8 @@ HEADERS  += mainwindow.h \
     plugin/iplugin.h \
     feiqwin.h \
     plugin/unreadchecker.h \
-    plugin/rankuser.h
+    plugin/rankuser.h \
+    settings.h
 
 FORMS    += mainwindow.ui \
     searchfellowdlg.ui \
