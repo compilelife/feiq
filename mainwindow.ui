@@ -146,9 +146,6 @@
    <property name="text">
     <string>查找</string>
    </property>
-   <property name="shortcut">
-    <string>Ctrl+S</string>
-   </property>
   </action>
   <action name="actionSettings">
    <property name="text">
@@ -168,7 +165,7 @@
     <string>发送文本消息</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Return</string>
+    <string/>
    </property>
   </action>
   <action name="actionSendKnock">

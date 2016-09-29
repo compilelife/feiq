@@ -6,10 +6,10 @@ Settings::Settings(const QString &fileName, QSettings::Format format, QObject *p
 
 }
 
-QVariant Settings::value(const QString &key, const QVariant &defaultValue)
+QVariant Settings::value(const QString &key, const QVariant &defaultValue, bool cacheDefault)
 {
     //如果配置中没有该项，则以默认值创建，方便用户知道有那些配置项可用
-    if (!contains(key))
+    if (!contains(key) && cacheDefault)
     {
         if (!defaultValue.isValid() || defaultValue.isNull())
             setValue(key, "");//防止非法值

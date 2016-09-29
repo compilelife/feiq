@@ -43,5 +43,5 @@ QString RankUser::fellowKey(const Fellow &f)
 
 int RankUser::weightOfFellow(const Fellow &f)
 {
-    return mFeiq->settings()->value(fellowKey(f), "0").toInt();
+    return mFeiq->settings()->value(fellowKey(f), "0", false).toInt();
 }

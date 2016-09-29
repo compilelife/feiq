@@ -21,6 +21,14 @@ MainWindow::MainWindow(QWidget *parent) :
     qRegisterMetaType<shared_ptr<ViewEvent>>("ViewEventSharedPtr");
 
     connect(this, SIGNAL(showErrorAndQuit(QString)), this, SLOT(onShowErrorAndQuit(QString)));
+
+    //加载配置
+    auto settingFilePath = QDir::home().filePath(".feiq_setting.ini");
+    mSettings = new Settings(settingFilePath, QSettings::IniFormat);
+    mSettings->setIniCodec(QTextCodec::codecForName("UTF-8"));
+    mTitle = mSettings->value("app/title", "mac飞秋").toString();
+    setWindowTitle(mTitle);
+
     //初始化搜索对话框
     mSearchFellowDlg = new SearchFellowDlg(this);
     connect(mSearchFellowDlg, SIGNAL(onFellowSelected(const Fellow*)),
@@ -48,6 +56,16 @@ MainWindow::MainWindow(QWidget *parent) :
     //初始化发送文本框
     mSendTextEdit = ui->sendEdit;
     connect(mSendTextEdit, SIGNAL(acceptDropFiles(QList<QFileInfo>)), this, SLOT(sendFiles(QList<QFileInfo>)));
+    if (mSettings->value("app/send_by_enter", true).toBool())
+    {
+        connect(mSendTextEdit, SIGNAL(enterPressed()), this, SLOT(sendText()));
+        connect(mSendTextEdit, SIGNAL(ctrlEnterPressed()), mSendTextEdit, SLOT(newLine()));
+    }
+    else
+    {
+        connect(mSendTextEdit, SIGNAL(ctrlEnterPressed()), this, SLOT(sendText()));
+        connect(mSendTextEdit, SIGNAL(enterPressed()), mSendTextEdit, SLOT(newLine()));
+    }
 
     //初始化Emoji对话框
     mChooseEmojiDlg = new ChooseEmojiDlg(this);
@@ -61,13 +79,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionSendText, SIGNAL(triggered(bool)), this, SLOT(sendText()));
     connect(ui->actionSendKnock, SIGNAL(triggered(bool)), this, SLOT(sendKnock()));
     connect(ui->actionSendFile, SIGNAL(triggered(bool)), this, SLOT(sendFile()));
-
-    //加载配置
-    auto settingFilePath = QDir::home().filePath(".feiq_setting.ini");
-    mSettings = new Settings(settingFilePath, QSettings::IniFormat);
-    mSettings->setIniCodec(QTextCodec::codecForName("UTF-8"));
-    mTitle = mSettings->value("app/title", "mac飞秋").toString();
-    setWindowTitle(mTitle);
 
     //初始化飞秋引擎
     connect(this, SIGNAL(feiqViewEvent(shared_ptr<ViewEvent>)), this, SLOT(handleFeiqViewEvent(shared_ptr<ViewEvent>)));
