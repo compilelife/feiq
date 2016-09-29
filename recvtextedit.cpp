@@ -207,7 +207,7 @@ QString RecvTextEdit::textHtmlStr(const TextContent *content)
     for (auto i = 0; i < EMOJI_LEN; i++)
     {
          auto resName = QString(":/default/res/face/")+QString::number(i+1)+".gif";
-         auto emojiStr = g_emojis[i];
+         auto emojiStr = QString(g_emojis[i]).toHtmlEscaped();
          QString imgTag = "<img src=\""+resName+"\"/>";
          htmlStr.replace(emojiStr, imgTag);
     }
