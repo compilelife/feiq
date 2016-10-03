@@ -31,6 +31,8 @@ signals:
 
 private:
     QString timeStr(long long msSinceEpoch);
+    void addContent(const Content* content, long long msSinceEpoch, bool mySelf);
+    void showHint(long long msSinceEpoch, bool mySelf);
     void showContent(const Content* content, bool mySelf);
     void showFile(const FileContent* content, bool fromMySelf);
     void showImage(const ImageContent* content);

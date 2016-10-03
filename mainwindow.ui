@@ -146,6 +146,9 @@
    <property name="text">
     <string>查找</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
   </action>
   <action name="actionSettings">
    <property name="text">

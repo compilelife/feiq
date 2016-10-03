@@ -27,33 +27,45 @@ void RecvTextEdit::mouseReleaseEvent(QMouseEvent *e)
 
 void RecvTextEdit::addFellowContent(const Content *content, long long msSinceEpoch)
 {
-    drawDaySeperatorIfNewDay(msSinceEpoch);
-
-    QString hint = "";
-    if (mFellow)
-        hint = mFellow->getName().c_str();
-    else
-        hint = "匿名";
-    hint = hint+" <font color=gray>"+ timeStr(msSinceEpoch)+"</font>";
-    moveCursor(QTextCursor::End);
-    insertHtml(hint);
-    append("");
-    showContent(content, false);
-    append("\n");
-    moveCursor(QTextCursor::End);
+    addContent(content, msSinceEpoch, false);
 }
 
 void RecvTextEdit::addMyContent(const Content *content, long long msSinceEpoch)
 {
+    addContent(content, msSinceEpoch, true);
+}
+
+void RecvTextEdit::addContent(const Content *content, long long msSinceEpoch, bool mySelf)
+{
     drawDaySeperatorIfNewDay(msSinceEpoch);
 
-    QString hint = "我 <font color=gray>"+timeStr(msSinceEpoch)+"</font>";
+    showHint(msSinceEpoch, mySelf);
+
+    showContent(content, mySelf);
+    append("\n");
+    moveCursor(QTextCursor::End);
+}
+
+void RecvTextEdit::showHint(long long msSinceEpoch, bool mySelf)
+{
+    QString name("");
+    QString color("black");
+    if (mySelf)
+    {
+        name = "我";
+        color = "blue";
+    }
+    else
+    {
+        name = mFellow == nullptr ? "匿名" : mFellow->getName().c_str();
+        color = "green";
+    }
+
+    QString hint = "<font color="+color+">"+ name+" "+timeStr(msSinceEpoch)+"</font>";
+
     moveCursor(QTextCursor::End);
     insertHtml(hint);
     append("");
-    showContent(content, true);
-    append("\n");
-    moveCursor(QTextCursor::End);
 }
 
 void RecvTextEdit::setCurFellow(const Fellow *fellow)
