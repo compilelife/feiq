@@ -6,6 +6,7 @@
 #include <memory>
 #include <functional>
 #include "fellow.h"
+#include <string>
 using namespace std;
 
 enum class FileTaskType{
@@ -48,6 +49,7 @@ public:
     string getDetailInfo() const;
     shared_ptr<FileContent> getContent() const;
     FileTaskType type() const;
+    string getTaskTypeDes() const;
 private:
     shared_ptr<Fellow> mFellow;//要发送给的用户，或文件来自该用户
     int mProcess=0;

@@ -80,3 +80,12 @@ FileTaskType FileTask::type() const
 {
     return mType;
 }
+
+string FileTask::getTaskTypeDes() const
+{
+    if (mType == FileTaskType::Upload)
+        return "发送";
+    else if (mType == FileTaskType::Download)
+        return "接收";
+    return "";
+}

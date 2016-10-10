@@ -147,6 +147,20 @@ void MainWindow::showResult(pair<bool, string> ret, const Content* content)
 
 void MainWindow::onStateChanged(FileTask *fileTask)
 {
+    if (fileTask->getState()==FileTaskState::Finish)
+    {
+        auto title = QString(fileTask->getTaskTypeDes().c_str())+"完成";
+        PlatformDepend::instance().showNotify(title, fileTask->getContent()->filename.c_str());
+    }
+    else if (fileTask->getState()==FileTaskState::Error)
+    {
+        auto title = QString(fileTask->getTaskTypeDes().c_str())+"失败";
+        auto content = QString(fileTask->getContent()->filename.c_str());
+        content += "\n";
+        content += fileTask->getDetailInfo().c_str();
+        PlatformDepend::instance().showNotify(title, content);
+    }
+
     if (mDownloadFileDlg->isVisible())
     {
         emit statChanged(fileTask);
