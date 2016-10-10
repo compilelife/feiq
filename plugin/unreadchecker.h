@@ -19,6 +19,7 @@ protected:
 private:
     int mUnreadTimerInterval;
     int mUnreadTimerId=-1;
+    int mLastCheckCount=0;
 };
 
 #endif // UNREADCHECKER_H

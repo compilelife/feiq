@@ -15,7 +15,10 @@ void UnreadChecker::timerEvent(QTimerEvent *event)
     {
         auto count = mFeiq->getUnreadCount();
         if (count > 0)
+        {
+            PlatformDepend::instance().hideAllNotify();
             PlatformDepend::instance().showNotify("未读提醒", QString("还有%1条未读消息").arg(count));
+        }
     }
 }
 
