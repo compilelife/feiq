@@ -7,10 +7,12 @@
 class MockPlatform : public IPlatform
 {
 public:
-    void showNotify(const QString& title, const QString& content)
+    long showNotify(const QString& title, const QString& content, const QString& data)
     {
         (void)title;
         (void)content;
+        (void)data;
+        return 0;
     }
     void hideAllNotify()
     {
@@ -43,9 +45,9 @@ PlatformDepend &PlatformDepend::instance()
     return me;
 }
 
-void PlatformDepend::showNotify(const QString &title, const QString &content)
+long PlatformDepend::showNotify(const QString &title, const QString &content, const QString &fellowIp)
 {
-    mImpl->showNotify(title, content);
+    return mImpl->showNotify(title, content, fellowIp);
 }
 
 void PlatformDepend::hideAllNotify()
@@ -56,4 +58,10 @@ void PlatformDepend::hideAllNotify()
 void PlatformDepend::setBadgeNumber(int number)
 {
     mImpl->setBadgeNumber(number);
+}
+
+void PlatformDepend::setMainWnd(MainWindow *mainWnd)
+{
+    IPlatform::setMainWnd(mainWnd);
+    mImpl->setMainWnd(mainWnd);
 }

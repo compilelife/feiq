@@ -6,9 +6,9 @@ OsxPlatform::OsxPlatform()
 
 }
 
-void OsxPlatform::showNotify(const QString &title, const QString &content)
+long OsxPlatform::showNotify(const QString &title, const QString &content, const QString & fellowIp)
 {
-    mNotify.show(title, content);
+    return mNotify.show(title, content, fellowIp);
 }
 
 void OsxPlatform::hideAllNotify()
@@ -22,4 +22,10 @@ void OsxPlatform::setBadgeNumber(int number)
         QtMac::setBadgeLabelText("");
     else
         QtMac::setBadgeLabelText(QString::number(number));
+}
+
+void OsxPlatform::setMainWnd(MainWindow *mainWnd)
+{
+    IPlatform::setMainWnd(mainWnd);
+    mNotify.setMainWnd(mainWnd);
 }

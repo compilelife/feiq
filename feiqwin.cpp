@@ -2,8 +2,6 @@
 #include "mainwindow.h"
 #include "plugin/iplugin.h"
 
-#include "plugin/unreadchecker.h"
-
 FeiqWin::FeiqWin()
 {
 
@@ -32,11 +30,6 @@ const FeiqModel *FeiqWin::feiqModel()
 Settings *FeiqWin::settings()
 {
     return mMainWin->mSettings;
-}
-
-int FeiqWin::getUnreadCount()
-{
-    return mMainWin->getUnreadCount();
 }
 
 void FeiqWin::init(MainWindow *mainWin)

@@ -27,9 +27,6 @@ public:
     const FeiqModel* feiqModel();
     Settings* settings();
 
-public:
-    int getUnreadCount();
-
 private:
     void init(MainWindow* mainWin);
     void unInit();

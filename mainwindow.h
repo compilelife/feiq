@@ -21,6 +21,19 @@ class MainWindow;
 
 class FeiqWin;
 
+struct UnshownMessage
+{
+    shared_ptr<ViewEvent> event;
+    bool replied = false;
+    bool read = false;
+    long notifyId = 0;
+
+    bool isUnread()
+    {
+        return !replied && !read;
+    }
+};
+
 Q_DECLARE_METATYPE(shared_ptr<ViewEvent>)
 class MainWindow : public QMainWindow, IFeiqView
 {
@@ -32,6 +45,10 @@ public:
     ~MainWindow();
 
     void setFeiqWin(FeiqWin* feiqWin);
+
+public slots:
+    void onNotifyClicked(const QString& fellowIp);
+    void onNotifyReplied(long notifyId, const QString& fellowIp, const QString& reply);
 
 protected:
     void enterEvent(QEvent *event);
@@ -62,18 +79,21 @@ private slots:
 
 private:
     void userAddFellow(QString ip);
-    void notifyUnread(const ViewEvent* event);
-    void showNotification(const Fellow* fellow, const QString& text);
+    long showNotification(const Fellow* fellow, const QString& text);
     shared_ptr<Fellow> checkCurFellow();
     void showResult(pair<bool, string> ret, const Content *content);
     vector<const Fellow*> fellowSearchDriver(const QString& text);
     void initFeiq();
-    void updateUnread(const Fellow* fellow);
-    int getUnreadCount();
-    void flushUnread(const Fellow* fellow);
     void readEvent(const ViewEvent* event);
     void setBadgeNumber(int number);
     QString simpleTextOf(const Content* content);
+
+    UnshownMessage& addUnshownMessage(const Fellow *fellow, shared_ptr<ViewEvent> event);
+    UnshownMessage *findUnshownMessage(int id);
+    void notifyUnshown(UnshownMessage &umsg);
+    void updateUnshownHint(const Fellow* fellow);
+    int getUnreadCount();
+    void flushUnshown(const Fellow* fellow);
 
     // IFileTaskObserver interface
 public:
@@ -95,7 +115,7 @@ private:
     RecvTextEdit* mRecvTextEdit;
     SendTextEdit* mSendTextEdit;
     QString mTitle;
-    unordered_map<const Fellow*, list<shared_ptr<ViewEvent>>> mUnreadEvents;
+    unordered_map<const Fellow*, list<UnshownMessage>> mUnshownEvents;
     FeiqWin* mFeiqWin = nullptr;
 };
 

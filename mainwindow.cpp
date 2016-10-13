@@ -80,6 +80,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionSendKnock, SIGNAL(triggered(bool)), this, SLOT(sendKnock()));
     connect(ui->actionSendFile, SIGNAL(triggered(bool)), this, SLOT(sendFile()));
 
+    //初始化平台相关特性
+    PlatformDepend::instance().setMainWnd(this);
+
     //初始化飞秋引擎
     connect(this, SIGNAL(feiqViewEvent(shared_ptr<ViewEvent>)), this, SLOT(handleFeiqViewEvent(shared_ptr<ViewEvent>)));
 
@@ -105,13 +108,55 @@ void MainWindow::setFeiqWin(FeiqWin *feiqWin)
     mFeiqWin->init(this);
 }
 
+void MainWindow::onNotifyClicked(const QString& fellowIp)
+{
+    qDebug()<<fellowIp;
+    auto fellow = mFeiq.getModel().findFirstFellowOf(fellowIp.toStdString());
+    if (fellow)
+        openChartTo(fellow.get());
+
+    raise();
+    activateWindow();
+    showNormal();
+}
+
+void MainWindow::onNotifyReplied(long notifyId, const QString &fellowIp, const QString &reply)
+{
+    auto fellow = mFeiq.getModel().findFirstFellowOf(fellowIp.toStdString());
+    if (fellow)
+    {
+        //回复消息
+        auto content = make_shared<TextContent>();
+        content->text = reply.toStdString();
+
+        mFeiq.send(fellow, content);
+
+        //设为已回复
+        auto msgRepliedTo = findUnshownMessage(notifyId);
+        if (msgRepliedTo)
+        {
+            msgRepliedTo->replied=true;
+        }
+
+        //将自己的回复放入未显示列表
+        auto event = make_shared<MessageViewEvent>();
+        event->contents.push_back(content);
+        event->fellow = nullptr;
+
+        auto& msg = addUnshownMessage(fellow.get(), event);
+        msg.read = true;
+
+        updateUnshownHint(fellow.get());
+    }
+}
+
 void MainWindow::enterEvent(QEvent *event)
 {
     auto fellow = mRecvTextEdit->curFellow();
     if (fellow)
     {
-        flushUnread(fellow);
-        updateUnread(fellow);
+        flushUnshown(fellow);
+        updateUnshownHint(fellow);
     }
 
     PlatformDepend::instance().hideAllNotify();
@@ -122,8 +167,8 @@ void MainWindow::openChartTo(const Fellow *fellow)
     mFellowList.top(*fellow);
     mRecvTextEdit->setCurFellow(fellow);
     setWindowTitle(mTitle + " - 与"+fellow->getName().c_str()+"会话中");
-    flushUnread(fellow);
-    updateUnread(fellow);
+    flushUnshown(fellow);
+    updateUnshownHint(fellow);
 }
 
 shared_ptr<Fellow> MainWindow::checkCurFellow()
@@ -150,7 +195,9 @@ void MainWindow::onStateChanged(FileTask *fileTask)
     if (fileTask->getState()==FileTaskState::Finish)
     {
         auto title = QString(fileTask->getTaskTypeDes().c_str())+"完成";
-        PlatformDepend::instance().showNotify(title, fileTask->getContent()->filename.c_str());
+        PlatformDepend::instance().showNotify(title,
+                                              fileTask->getContent()->filename.c_str(),
+                                              fileTask->fellow()->getIp().c_str());
     }
     else if (fileTask->getState()==FileTaskState::Error)
     {
@@ -158,7 +205,9 @@ void MainWindow::onStateChanged(FileTask *fileTask)
         auto content = QString(fileTask->getContent()->filename.c_str());
         content += "\n";
         content += fileTask->getDetailInfo().c_str();
-        PlatformDepend::instance().showNotify(title, content);
+        PlatformDepend::instance().showNotify(title,
+                                              content,
+                                              fileTask->fellow()->getIp().c_str());
     }
 
     if (mDownloadFileDlg->isVisible())
@@ -200,23 +249,15 @@ void MainWindow::handleFeiqViewEvent(shared_ptr<ViewEvent> event)
         auto e = static_cast<FellowViewEvent*>(event.get());
         auto fellow = e->fellow.get();
 
-        if (isActiveWindow())
+        if (isActiveWindow() && fellow == mRecvTextEdit->curFellow())
         {//窗口可见，处理当前用户消息，其他用户消息则放入通知队列
-            if (fellow == mRecvTextEdit->curFellow())
-            {
-                readEvent(event.get());
-            }
-            else
-            {
-                mUnreadEvents[fellow].push_back(event);
-                updateUnread(fellow);
-            }
+            readEvent(event.get());
         }
         else
         {//窗口不可见，放入未读队列并通知
-            mUnreadEvents[fellow].push_back(event);
-            updateUnread(fellow);
-            notifyUnread(event.get());
+            auto& umsg = addUnshownMessage(fellow, event);
+            notifyUnshown(umsg);
+            updateUnshownHint(fellow);
         }
     }
 }
@@ -277,31 +318,39 @@ void MainWindow::userAddFellow(QString ip)
     mFeiq.sendImOnLine(fellow->getIp());
 }
 
-void MainWindow::notifyUnread(const ViewEvent *event)
+void MainWindow::notifyUnshown(UnshownMessage& umsg)
 {
+    auto event = umsg.event.get();
     if (event->what == ViewEventType::SEND_TIMEO)
     {
         auto e = static_cast<const SendTimeoEvent*>(event);
         auto fellow = e->fellow.get();
-        showNotification(fellow, "发送超时:"+simpleTextOf(e->content.get()));
+        umsg.notifyId = showNotification(fellow, "发送超时:"+simpleTextOf(e->content.get()));
     }
     else if (event->what == ViewEventType::MESSAGE)
     {
         auto e = static_cast<const MessageViewEvent*>(event);
         auto fellow = e->fellow.get();
+        QString text="";
+        bool first=false;
         for (auto content : e->contents)
         {
-            showNotification(fellow, simpleTextOf(content.get()));
+            auto t = simpleTextOf(content.get());
+            if (first)
+                text = t;
+            else
+                text = text+"\n"+t;
         }
+        umsg.notifyId = showNotification(fellow, text);
     }
 }
 
-void MainWindow::showNotification(const Fellow *fellow, const QString &text)
+long MainWindow::showNotification(const Fellow *fellow, const QString &text)
 {
     QString content(text);
     if (content.length()>20)
         content = content.left(20)+"...";
-    PlatformDepend::instance().showNotify(QString(fellow->getName().c_str())+":", content);
+    return PlatformDepend::instance().showNotify(QString(fellow->getName().c_str())+":", content, fellow->getIp().c_str());
 }
 
 void MainWindow::navigateToFileTask(IdType packetNo, IdType fileId, bool upload)
@@ -462,12 +511,12 @@ void MainWindow::initFeiq()
     qDebug()<<"feiq started";
 }
 
-void MainWindow::updateUnread(const Fellow *fellow)
+void MainWindow::updateUnshownHint(const Fellow *fellow)
 {
-    auto it = mUnreadEvents.find(fellow);
-    if (it != mUnreadEvents.end())
+    auto it = mUnshownEvents.find(fellow);
+    if (it != mUnshownEvents.end())
     {
-        auto count = (*it).second.size();
+        auto count = it->second.size();
         if (count == 0)
         {
             mFellowList.mark(*fellow, "");
@@ -483,26 +532,30 @@ void MainWindow::updateUnread(const Fellow *fellow)
 
 int MainWindow::getUnreadCount()
 {
-    auto begin = mUnreadEvents.begin();
-    auto end = mUnreadEvents.end();
+    auto begin = mUnshownEvents.begin();
+    auto end = mUnshownEvents.end();
     auto count = 0;
     for (auto it = begin; it != end; it++)
     {
-        count += it->second.size();
+        for (auto msg : it->second)
+        {
+            if (msg.isUnread())
+                ++count;
+        }
     }
     return count;
 }
 
-void MainWindow::flushUnread(const Fellow *fellow)
+void MainWindow::flushUnshown(const Fellow *fellow)
 {
-    auto it = mUnreadEvents.find(fellow);
-    if (it != mUnreadEvents.end())
+    auto it = mUnshownEvents.find(fellow);
+    if (it != mUnshownEvents.end())
     {
         auto& list = (*it).second;
         while (!list.empty())
         {
-            auto event = list.front();
-            readEvent(event.get());
+            auto msg = list.front();
+            readEvent(msg.event.get());
             list.pop_front();
         }
     }
@@ -525,7 +578,10 @@ void MainWindow::readEvent(const ViewEvent *event)
         auto time =  e->when.time_since_epoch().count();
         for (auto content : e->contents)
         {
-            mRecvTextEdit->addFellowContent(content.get(), time);
+            if (e->fellow == nullptr)
+                mRecvTextEdit->addMyContent(content.get(), time);
+            else
+                mRecvTextEdit->addFellowContent(content.get(), time);
         }
     }
 }
@@ -549,4 +605,28 @@ QString MainWindow::simpleTextOf(const Content *content)
         return "***";
         break;
     }
+}
+
+UnshownMessage &MainWindow::addUnshownMessage(const Fellow *fellow, shared_ptr<ViewEvent> event)
+{
+    UnshownMessage msg;
+    msg.event = event;
+    mUnshownEvents[fellow].push_back(msg);
+    return mUnshownEvents[fellow].back();
+}
+
+UnshownMessage* MainWindow::findUnshownMessage(int id)
+{
+    auto begin = mUnshownEvents.begin();
+    auto end = mUnshownEvents.end();
+
+    for (auto it = begin; it != end; it++)
+    {
+        for (auto& msg : it->second){
+            if (msg.notifyId == id)
+                return &msg;
+        }
+    }
+
+    return nullptr;
 }

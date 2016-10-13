@@ -20,12 +20,14 @@ mac{
 
     LIBS += -framework Foundation
 
-    OBJECTIVE_SOURCES += osx/notification.mm
+    OBJECTIVE_SOURCES += osx/notification.mm\
+                    osx/notificationimpl.mm
 
     SOURCES += osx/osxplatform.cpp
 
     HEADERS += osx/notification.h\
-                osx/osxplatform.h
+                osx/osxplatform.h\
+                osx/notificationimpl.h
 }
 
 SOURCES += main.cpp\
@@ -54,7 +56,6 @@ SOURCES += main.cpp\
     chooseemojiwidget.cpp \
     sendtextedit.cpp \
     feiqwin.cpp \
-    plugin/unreadchecker.cpp \
     plugin/iplugin.cpp \
     plugin/rankuser.cpp \
     settings.cpp
@@ -94,7 +95,6 @@ HEADERS  += mainwindow.h \
     sendtextedit.h \
     plugin/iplugin.h \
     feiqwin.h \
-    plugin/unreadchecker.h \
     plugin/rankuser.h \
     settings.h
 

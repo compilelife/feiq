@@ -10,11 +10,12 @@ public:
     OsxPlatform();
 
 public:
-    void showNotify(const QString& title, const QString& content) override;
+    long showNotify(const QString& title, const QString& content, const QString &fellowIp) override;
     void hideAllNotify() override;
 
     void setBadgeNumber(int number) override;
 
+    void setMainWnd(MainWindow *mainWnd) override;
 private:
     Notification mNotify;
 };
