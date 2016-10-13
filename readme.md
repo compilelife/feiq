@@ -31,10 +31,6 @@ send_by_enter=0 ;0：cmd/ctrl+enter发送；enter回车；  1：相反
 [network]
 custom_group=192.168.74.|192.168.82. ;设置一些广播包无法触及的子网，点号结束一个网段的定义，竖线分隔各个网段
 
-[unread_checker]
-enable=1 ;启用定时提醒未读通知，默认启用
-timer=600 ;启用定时提醒未读消息，间隔10分钟
-
 [rank_user]
 enable=1 ;启用按沟通频繁度排序用户的功能
 ```
