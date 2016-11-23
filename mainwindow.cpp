@@ -348,8 +348,8 @@ void MainWindow::notifyUnshown(UnshownMessage& umsg)
 long MainWindow::showNotification(const Fellow *fellow, const QString &text)
 {
     QString content(text);
-    if (content.length()>20)
-        content = content.left(20)+"...";
+    if (content.length()>100)
+        content = content.left(100)+"...";
     return PlatformDepend::instance().showNotify(QString(fellow->getName().c_str())+":", content, fellow->getIp().c_str());
 }
 
