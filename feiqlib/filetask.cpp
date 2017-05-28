@@ -22,7 +22,8 @@ void FileTask::setObserver(IFileTaskObserver *observer)
 void FileTask::setProcess(int val)
 {
     mProcess = val;
-    if (mProcess - mLastProcess >= mNotifySize)
+    if (mProcess - mLastProcess >= mNotifySize
+        || mProcess >= mContent->size)
     {
         mLastProcess = mProcess;
         mObserver->onProgress(this);

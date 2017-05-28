@@ -129,7 +129,7 @@
 #define IPMSG_FILE_ALIASFNAME 0x00000040    // alias fname
 #define IPMSG_FILE_UNICODEFNAME 0x00000041    // UNICODE fname
 
-#define FILELIST_SEPARATOR 0x7
+#define FILELIST_SEPARATOR (char)0x7
 #define HOSTLIST_DUMMY (char)0x8
 #define HLIST_ENTRY_SEPARATOR (char)0x3a
 

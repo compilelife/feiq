@@ -69,7 +69,9 @@ public:
         <<sep
         <<content->modifyTime
         <<sep
-        <<content->fileType;
+        <<content->fileType
+        <<sep
+        <<FILELIST_SEPARATOR;
     }
 };
 
@@ -332,9 +334,11 @@ public:
                 break;
 
             auto content = createFileContent(found, endTask);
-            content->packetNo = stoul(post->packetNo);
             if (content != nullptr)
+            {
+                content->packetNo = stoul(post->packetNo);
                 post->contents.push_back(shared_ptr<Content>(std::move(content)));
+            }
 
             found = ++endTask;
         }
@@ -610,6 +614,7 @@ bool FeiqEngine::downloadFile(FileTask* task)
         }
 
         fclose(of);
+        task->setProcess(total);
         task->setState(FileTaskState::Finish);
     };
 
